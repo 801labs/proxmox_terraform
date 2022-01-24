@@ -9,4 +9,19 @@ Next run
 myinit.sh
 ```
 
+To test local syntax of code run:
+```
+terraform validate
+```
+
+To plan your change run:
+
+```
+terraform plan -out local.plan -var-file local.tfvars
+```
+
+Finally Execute the plan if everything looks good:
+```
+terraform apply local.plan
+```
 

@@ -2,3 +2,6 @@
 .terraform.d/*
 .terraform/providers/*
 **/.terraform.lock.hcl
+local.tfvars
+*.plan
+terraform.tfstate
