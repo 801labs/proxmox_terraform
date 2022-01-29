@@ -8,6 +8,7 @@ variable "vms" {
 				agent = bool
 				disk_datastore = string
 				disk_size = number
+				disk_format = string
 				cores = number
 				ssh_user = string
 			}
@@ -23,6 +24,7 @@ variable "vms" {
 			memory = 2048
 			disk_datastore = "local-lvm"
 			disk_size = 30
+			disk_format = "raw"
 			ssh_user = "chad"
 
 		},
@@ -34,6 +36,7 @@ variable "vms" {
 			cores = 2
 			memory = 2048
 			disk_size = 30
+			disk_format = "raw"
 			ssh_user = "cwayment"
 				
 		}
