@@ -1,12 +1,17 @@
 terraform {
   required_providers {
     proxmox = {
-      source = "Telmate/proxmox"
-      version = "2.9.4"
+      source = "blz-ea/proxmox"
+      version = "0.3.3"
     }
   }
 }
 
 provider "proxmox" {
-  pm_api_url = "https://proxmox1:8006/api2/json"
+   virtual_environment {
+	endpoint = var.proxmox_url
+	username = var.pm_user
+	password = var.pm_password
+	insecure = true
+   }
 }
