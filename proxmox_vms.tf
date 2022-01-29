@@ -1,4 +1,4 @@
-resource "proxmox_virtual_environment_vm" "vms" {
+resource "proxmox_virtual_environment_vm" "ubuntu_vms" {
 	for_each = var.vms
 	name = each.value.name	
 	node_name = var.node_name
@@ -31,12 +31,13 @@ resource "proxmox_virtual_environment_vm" "vms" {
 	disk {
 		size = each.value.disk_size
 		datastore_id = each.value.disk_datastore
-		file_id = proxmox_virtual_environment_file.ubuntu_cloud_image.id
+		file_id = proxmox_virtual_environment_file.ubuntu_server_image.id
+		file_format = each.value.disk_format
 	}
 	
 }
 
-resource "proxmox_virtual_environment_file" "ubuntu_cloud_image" {
+resource "proxmox_virtual_environment_file" "ubuntu_server_image" {
 	content_type = "iso"
 	datastore_id = var.datastore_name
 	node_name = var.node_name
