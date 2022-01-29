@@ -1,24 +1,21 @@
 # This file is maintained automatically by "terraform init".
 # Manual edits may be lost in future updates.
 
-provider "registry.terraform.io/telmate/proxmox" {
-  version     = "2.9.4"
-  constraints = "2.9.4"
+provider "registry.terraform.io/blz-ea/proxmox" {
+  version     = "0.3.3"
+  constraints = "0.3.3"
   hashes = [
-    "h1:MCXY7toRE6zkWQSE6KIEPmnDB3vrL5UfOiNJDA5ldUg=",
-    "zh:02df71e75b3a9f2d5f81fc9470b95fd28b5963d77a886615e9aea5f88a769cf5",
-    "zh:03319bbf20a74680128a9e86f2cd193092a4687cf3f09edd0ecb0fc8f4341fab",
-    "zh:23888428dc2efc6589edbcbbab3968e00da5bdadb5ec49e3940805b9ee21ca36",
-    "zh:2ae36df879961802f2197a5db6d902b97b7e18c87a71322db1102121137b1627",
-    "zh:2f4515c8ebc66a0c3fd664fd3c5fc5b4cce1c1fff6e528dda43c581034ea1c7a",
-    "zh:83701053fbfa6e68dd1cb3a60db6f32a70468180fbb96d621adc8eaa890a022d",
-    "zh:9dcf664a20543d7bb03d8ac570d7d6098c2ee3bd9d383994d42ad7b4e4973acb",
-    "zh:a5ea9308f66b743428871f81645f9eb7a54a9b837b4ffc9f0380c1568a5a0805",
-    "zh:a6570cd8f668507df9c10b34fbf7f8a131db2757e6fae34e0228e4e1d60df324",
-    "zh:b2c6d15b9a0bfebd25a309358e90961d67707647d218349d25351ff5d89cae5c",
-    "zh:cfbd4d0ef06e939e86baad8266a57421dbf2836216995e863d1ecb26c17839a0",
-    "zh:d7c12ca0924112b1b4241709adbb2e2162da52cf85a912587e7a08ca1ce56d74",
-    "zh:da7508dfb4a0f0436bc1b7335906d1bde186c309753b238745a0910491810912",
-    "zh:dae65945a28f2869fe2e3c169cd9c3664c9e910937781423d63b168423907648",
+    "h1:uVzg7JTNYjj0El4hCpOZFL/2Sse9hfaR5eGFee6Txhk=",
+    "zh:0828cd53aa0277ca9b91015ce1f7a942ef08e38967682931473cd6cce3d3ac7e",
+    "zh:1580957c5c871dea3b3919363ef1ea51b6456206d03590b536e69bbdcf757746",
+    "zh:2900e6c4c251e9c2c6c6b436f216bc27055d891f4ce8f7f2984320ca58681861",
+    "zh:4f5c5b0935c6dc4ddf3eb9723df05c833be988cdb6981f265c0a839febe6e3e9",
+    "zh:645e28f09c29caabd4320c8737094c97483ddd42d32a1bc546225056d8244aae",
+    "zh:7d1578ed0cdbf9b2585a57e0faa10cfee56986facfbded8343b36c4f7e93ac07",
+    "zh:8cc0eac8f5e229d40724712940b2961e4516493f91c8df409b8410c5b8e3146a",
+    "zh:8d4e1f32a5ad29ef68982c434d0d184deddb1a457a1f1ab5ea455da7d82a89e1",
+    "zh:a81d3cdb1a4c4b362f4cc9b39f1e066635e8ab805d98df22b7150863eecb507d",
+    "zh:cbb67d5131c4ad255276af6ce8d0c5a29c789627dde458a2a8bd447dc0bd71b8",
+    "zh:f0e1b39a7699eb6c124bd930b5f0aa5b9272ead0c77ea27eacbfddd7c056758f",
   ]
 }
