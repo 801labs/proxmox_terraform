@@ -1,4 +1,5 @@
 *init.sh
+.terraform.tfstate.lock.info
 .terraform.d/*
 .terraform/providers/*
 **/.terraform.lock.hcl
