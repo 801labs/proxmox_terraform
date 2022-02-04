@@ -9,9 +9,9 @@ terraform {
 
 provider "proxmox" {
    virtual_environment {
-	endpoint = var.proxmox_url
-	username = var.pm_user
-	password = var.pm_password
-	insecure = true
+		  endpoint = var.proxmox_url
+			username = var.pm_user
+			password = var.pm_password
+			insecure = true
    }
 }
