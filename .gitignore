@@ -6,3 +6,4 @@
 local.tfvars
 *.plan
 terraform.tfstate
+.terraform.tfstate.*
