@@ -6,4 +6,5 @@
 .terraform.lock.hcl
 local.tfvars
 *.plan
+terraform.tfstate.*
 terraform.tfstate
