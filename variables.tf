@@ -59,7 +59,7 @@ variable "node_name" {
 }
 
 variable "proxmox_url" {
-   default = "https://192.168.1.13:8006/api2/json"
+   default = "https://192.168.40.201:8006"
    description = "Proxmox url for connecting to api"
 }
 
