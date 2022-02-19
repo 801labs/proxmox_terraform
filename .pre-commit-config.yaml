@@ -3,5 +3,3 @@ repos:
   rev: v1.64.0
   hooks:
      - id: terraform_fmt
-     - id: tflint
-     - id: checkov
