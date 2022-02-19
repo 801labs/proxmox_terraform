@@ -10,7 +10,6 @@ variable "vms" {
         disk_size      = number
         disk_format    = string
         cores          = number
-        ssh_user       = string
       }
 
     )
@@ -25,7 +24,6 @@ variable "vms" {
       disk_datastore = "local-lvm"
       disk_size      = 30
       disk_format    = "raw"
-      ssh_user       = "chad"
 
     },
     "ubuntu-test-2" = {
@@ -37,13 +35,11 @@ variable "vms" {
       memory         = 2048
       disk_size      = 30
       disk_format    = "raw"
-      ssh_user       = "cwayment"
 
     }
   }
 }
 
-variable "ssh_key_user1" {}
 variable "pm_user" {}
 variable "pm_password" {}
 variable "datastore_name" {

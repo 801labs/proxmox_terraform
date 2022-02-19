@@ -8,6 +8,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vms" {
 
   agent {
     enabled = each.value.agent
+    timeout = "15m"
   }
 
   initialization {
@@ -17,10 +18,8 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vms" {
       }
     }
 
-    user_account {
-      username = each.value.ssh_user
-      keys     = ["${trimspace(var.ssh_key_user1)}"]
-    }
+    user_data_file_id = proxmox_virtual_environment_file.cloud_config.id
+
   }
   memory {
     dedicated = each.value.memory
@@ -51,6 +50,21 @@ resource "random_password" "ubuntu_vm_password" {
   special = true
 }
 
+resource "proxmox_virtual_environment_file" "cloud_config" {
+  content_type = "snippets"
+  datastore_id = var.datastore_name
+  node_name    = var.node_name
+  source_raw {
+    file_name = "cloud_init"
+    data      = <<EOF
+    #!/usr/bin/env basho
+    sudo apt-update 
+    sudo apt-upgrade -y 
+    sudo apt install nginx
+    EOF
+  }
+}
+
 resource "proxmox_virtual_environment_file" "ubuntu_server_image" {
   content_type = "iso"
   datastore_id = var.datastore_name
@@ -65,11 +79,4 @@ output "ubuntu_vm_pass" {
   sensitive = true
 }
 
-output "ubuntu_vm_private_key" {
-  value     = tls_private_key.ubuntu_vm_key.private_key_pem
-  sensitive = true
-}
 
-output "ubuntu_vm_public_key" {
-  value = tls_private_key.ubuntu_vm_key.public_key_openssh
-}
