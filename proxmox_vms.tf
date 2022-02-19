@@ -37,11 +37,25 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vms" {
 
 }
 
+resource "tls_private_key" "ubuntu_vm_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
 resource "proxmox_virtual_environment_file" "ubuntu_server_image" {
   content_type = "iso"
   datastore_id = var.datastore_name
   node_name    = var.node_name
   source_file {
-    path = "https://releases.ubuntu.com/20.04/ubuntu-20.04.3-live-server-amd64.iso"
+    path = "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
   }
+}
+
+output "ubuntu_vm_private_key" {
+  value     = tls_private_key.ubuntu_vm_key.private_key_pem
+  sensitive = true
+}
+
+output "ubuntu_vm_public_key" {
+  value = tls_private_key.ubuntu_vm_key.public_key_openssh
 }
