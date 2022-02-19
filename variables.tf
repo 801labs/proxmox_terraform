@@ -43,7 +43,7 @@ variable "vms" {
   }
 }
 
-#variable "ssh_key_user1" {}
+variable "ssh_key_user1" {}
 variable "pm_user" {}
 variable "pm_password" {}
 variable "datastore_name" {

@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vms" {
 
     user_account {
       username = each.value.ssh_user
-      keys     = [var.ssh_key_user1]
+      keys     = ["${trimspace(var.ssh_key_user1)}"]
     }
   }
   memory {
@@ -35,11 +35,20 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vms" {
     file_format  = each.value.disk_format
   }
 
+  network_device {}
+
+  serial_device {}
+
 }
 
 resource "tls_private_key" "ubuntu_vm_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
+}
+
+resource "random_password" "ubuntu_vm_password" {
+  length  = 30
+  special = true
 }
 
 resource "proxmox_virtual_environment_file" "ubuntu_server_image" {
@@ -49,6 +58,11 @@ resource "proxmox_virtual_environment_file" "ubuntu_server_image" {
   source_file {
     path = "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
   }
+}
+
+output "ubuntu_vm_pass" {
+  value     = random_password.ubuntu_vm_password.result
+  sensitive = true
 }
 
 output "ubuntu_vm_private_key" {
