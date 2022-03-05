@@ -1,47 +1,23 @@
-resource "proxmox_virtual_environment_vm" "ubuntu_vms" {
-	for_each = var.vms
-	name = each.value.name	
-	node_name = var.node_name
-	cpu {
-		cores = each.value.cores
-	}
+resource "proxmox_vm_qemu" "ubuntu_vms" {
+  for_each     = var.vms
+  preprovision = true
+  name         = each.value.name
+  target_node  = var.node_name
 
-	agent {
-		enabled = each.value.agent
-	}
+  iso = var.ubuntu_cloud_iso
 
-	initialization {
-		ip_config {
-			ipv4 {
-				address = "dhcp"
-			}
-		}
+  cores  = each.value.cores
+  memory = each.value.memory
 
-		user_account {
-			username = each.value.ssh_user
-			keys = [var.ssh_key_user1]
-		}
-	}
-	memory {
-		dedicated = each.value.memory
-	}
-	operating_system {
-		type = each.value.os_type
-	}
-	disk {
-		size = each.value.disk_size
-		datastore_id = each.value.disk_datastore
-		file_id = proxmox_virtual_environment_file.ubuntu_server_image.id
-		file_format = each.value.disk_format
-	}
-	
+  os_type = each.value.os_type
+  boot    = "cdn"
+
+
+  disk {
+    size    = each.value.disk_size
+    storage = each.value.disk_datastore
+    type    = each.value.disk_type
+  }
+
 }
 
-resource "proxmox_virtual_environment_file" "ubuntu_server_image" {
-	content_type = "iso"
-	datastore_id = var.datastore_name
-	node_name = var.node_name
-	source_file {
-		path = "https://releases.ubuntu.com/20.04/ubuntu-20.04.3-live-server-amd64.iso"
-	}
-}

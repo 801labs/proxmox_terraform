@@ -1,17 +1,22 @@
 terraform {
   required_providers {
     proxmox = {
-      source = "blz-ea/proxmox"
-      version = "0.3.3"
+      source  = "Telmate/proxmox"
+      version = "2.9.6"
     }
   }
 }
 
 provider "proxmox" {
-   virtual_environment {
-	endpoint = var.proxmox_url
-	username = var.pm_user
-	password = var.pm_password
-	insecure = true
-   }
+  pm_api_url      = var.proxmox_url
+  pm_tls_insecure = true
+  pm_password     = var.pm_password
+  pm_user         = var.pm_user
+  pm_log_file     = "terraform_proxmox.log"
+  pm_log_enable   = true
+  pm_debug        = true
+  pm_log_levels = {
+    _default    = "debug"
+    _capturelog = ""
+  }
 }

@@ -1,66 +1,74 @@
 variable "vms" {
-	type = map(
-		object(
-			{
-				name = string
-				os_type = string
-				memory = number
-				agent = bool
-				disk_datastore = string
-				disk_size = number
-				disk_format = string
-				cores = number
-				ssh_user = string
-			}
-					
-		)
-	)
-	default = { 
-		"ubuntu-test-1" = {
-			name = "ubuntu-test-1"
-			os_type = "l26"
-			agent = true
-			cores = 2
-			memory = 2048
-			disk_datastore = "local-lvm"
-			disk_size = 30
-			disk_format = "raw"
-			ssh_user = "chad"
+  type = map(
+    object(
+      {
+        name           = string
+        os_type        = string
+        qemu_os        = string
+        memory         = number
+        onboot         = bool
+        agent          = number
+        disk_datastore = string
+        disk_size      = string
+        disk_type      = string
+        disk_format    = string
+        cores          = number
+      }
 
-		},
-		"ubuntu-test-2" = {
-			name = "ubuntu-test-2"
-			disk_datastore = "local-lvm"
-			agent = true
-			os_type = "l26"
-			cores = 2
-			memory = 2048
-			disk_size = 30
-			disk_format = "raw"
-			ssh_user = "cwayment"
-				
-		}
-	}
+    )
+  )
+  default = {
+    "ubuntu-test-1" = {
+      name           = "ubuntu-test-1"
+      os_type        = "cloud-init"
+      qemu_os        = "l26"
+      agent          = 0
+      cores          = 2
+      onboot         = true
+      memory         = 2048
+      disk_datastore = "local-lvm"
+      disk_size      = "30G"
+      disk_type      = "sata"
+      disk_format    = "raw"
+
+    },
+    "ubuntu-test-2" = {
+      name           = "ubuntu-test-2"
+      disk_datastore = "local-lvm"
+      agent          = 0
+      onboot         = true
+      os_type        = "cloud-init"
+      qemu_os        = "l26"
+      cores          = 2
+      memory         = 2048
+      disk_size      = "30G"
+      disk_type      = "sata"
+      disk_format    = "raw"
+
+    }
+  }
 }
 
-variable "ssh_key_user1" {}
 variable "pm_user" {}
 variable "pm_password" {}
 variable "datastore_name" {
-   default = "local"
-   description = "name of datastore for storing images and local data"
+  default     = "local"
+  description = "name of datastore for storing images and local data"
 }
 #variable "pm_api_token_secret" {}
 #variable "pm_api_token_id" {}
 
 variable "node_name" {
-   default = "proxmox1"
-   description = "name of proxmox node"
+  default     = "proxmox1"
+  description = "name of proxmox node"
 }
 
 variable "proxmox_url" {
-   default = "https://192.168.1.13:8006/api2/json"
-   description = "Proxmox url for connecting to api"
+  default     = "https://192.168.40.201:8006/api2/json"
+  description = "Proxmox url for connecting to api"
 }
 
+variable "ubuntu_cloud_iso" {
+  default = "local:iso/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
+}
 
