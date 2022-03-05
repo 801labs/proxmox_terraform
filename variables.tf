@@ -4,10 +4,13 @@ variable "vms" {
       {
         name           = string
         os_type        = string
+        qemu_os        = string
         memory         = number
-        agent          = bool
+        onboot         = bool
+        agent          = number
         disk_datastore = string
-        disk_size      = number
+        disk_size      = string
+        disk_type      = string
         disk_format    = string
         cores          = number
       }
@@ -17,23 +20,29 @@ variable "vms" {
   default = {
     "ubuntu-test-1" = {
       name           = "ubuntu-test-1"
-      os_type        = "l26"
-      agent          = true
+      os_type        = "cloud-init"
+      qemu_os        = "l26"
+      agent          = 0
       cores          = 2
+      onboot         = true
       memory         = 2048
       disk_datastore = "local-lvm"
-      disk_size      = 30
+      disk_size      = "30G"
+      disk_type      = "sata"
       disk_format    = "raw"
 
     },
     "ubuntu-test-2" = {
       name           = "ubuntu-test-2"
       disk_datastore = "local-lvm"
-      agent          = true
-      os_type        = "l26"
+      agent          = 0
+      onboot         = true
+      os_type        = "cloud-init"
+      qemu_os        = "l26"
       cores          = 2
       memory         = 2048
-      disk_size      = 30
+      disk_size      = "30G"
+      disk_type      = "sata"
       disk_format    = "raw"
 
     }
@@ -55,8 +64,11 @@ variable "node_name" {
 }
 
 variable "proxmox_url" {
-  default     = "https://192.168.40.201:8006"
+  default     = "https://192.168.40.201:8006/api2/json"
   description = "Proxmox url for connecting to api"
 }
 
+variable "ubuntu_cloud_iso" {
+  default = "local:iso/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
+}
 
