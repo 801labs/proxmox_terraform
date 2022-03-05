@@ -4,6 +4,7 @@
 .terraform/providers/*
 **/.terraform.lock.hcl
 .terraform.lock.hcl
+.terraform.lock.info
 local.tfvars
 *.plan
 terraform.tfstate.*
