@@ -13,10 +13,10 @@ provider "proxmox" {
   pm_password     = var.pm_password
   pm_user         = var.pm_user
   pm_log_file     = "terraform_proxmox.log"
-  pm_log_enable   = true
-  pm_debug        = true
+  pm_log_enable   = false
+  pm_debug        = false
   pm_log_levels = {
-    _default    = "debug"
+    _default    = "false"
     _capturelog = ""
   }
 }
