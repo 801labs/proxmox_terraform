@@ -51,6 +51,7 @@ variable "vms" {
 
 variable "pm_user" {}
 variable "pm_password" {}
+variable "ssh_private_key" {}
 variable "datastore_name" {
   default     = "local"
   description = "name of datastore for storing images and local data"
