@@ -11,3 +11,5 @@ terraform.tfstate.*
 terraform.tfstate
 .terraform.tfstate.*
 terraform_*.log
+*.swp
+**/*.swp
