@@ -70,6 +70,6 @@ variable "proxmox_url" {
 }
 
 variable "ubuntu_cloud_iso" {
-  default = "local:iso/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
+  default = "local:iso/ubuntu-20.04.4-live-server-amd64.iso"
 }
 
