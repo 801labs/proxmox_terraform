@@ -5,11 +5,12 @@
 **/.terraform.lock.hcl
 .terraform.lock.hcl
 .terraform.tfstate.*
-local.tfvars
+local.*
 *.plan
 terraform.tfstate.*
 terraform.tfstate
 .terraform.tfstate.*
 terraform_*.log
+*.log
 *.swp
 **/.*.swp

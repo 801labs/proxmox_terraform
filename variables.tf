@@ -13,6 +13,7 @@ variable "vms" {
         disk_type      = string
         disk_format    = string
         cores          = number
+        network_bridge = string
       }
 
     )
@@ -30,6 +31,7 @@ variable "vms" {
       disk_size      = "30G"
       disk_type      = "sata"
       disk_format    = "raw"
+      network_bridge = "vmbr0"
 
     },
     "ubuntu-test-2" = {
@@ -44,6 +46,7 @@ variable "vms" {
       disk_size      = "30G"
       disk_type      = "sata"
       disk_format    = "raw"
+      network_bridge = "vmbr0"
 
     }
   }
@@ -51,7 +54,7 @@ variable "vms" {
 
 variable "pm_user" {}
 variable "pm_password" {}
-variable "ssh_private_key" {}
+variable "ssh_keys" {}
 variable "datastore_name" {
   default     = "local"
   description = "name of datastore for storing images and local data"
@@ -70,6 +73,9 @@ variable "proxmox_url" {
 }
 
 variable "ubuntu_cloud_iso" {
-  default = "local:iso/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
+  default = "local:iso/ubuntu-20.04.4-live-server-amd64.iso"
 }
 
+variable "ubuntu_base_image" {
+  default = "ubuntu-20.04-template"
+}
