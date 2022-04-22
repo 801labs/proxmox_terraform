@@ -55,6 +55,7 @@ variable "vms" {
 variable "pm_user" {}
 variable "pm_password" {}
 variable "ssh_keys" {}
+variable "ssh_user" {}
 variable "datastore_name" {
   default     = "local"
   description = "name of datastore for storing images and local data"
@@ -76,6 +77,6 @@ variable "ubuntu_cloud_iso" {
   default = "local:iso/ubuntu-20.04.4-live-server-amd64.iso"
 }
 
-variable "ubuntu_base_image" {
+variable "template_name" {
   default = "ubuntu-20.04-template"
 }

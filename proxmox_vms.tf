@@ -3,7 +3,7 @@ resource "proxmox_vm_qemu" "ubuntu_vms" {
   name        = each.value.name
   target_node = var.node_name
 
-  clone = var.ubuntu_base_image
+  clone = var.template_name
 
   cores  = each.value.cores
   memory = each.value.memory
