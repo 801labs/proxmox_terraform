@@ -2,6 +2,7 @@ variable "vms" {
   type = map(
     object(
       {
+        index          = number
         name           = string
         os_type        = string
         qemu_os        = string
@@ -20,7 +21,8 @@ variable "vms" {
   )
   default = {
     "ubuntu-test-1" = {
-      name           = "ubuntu-test-1"
+      index          = "1"
+      name           = "ubuntu-test"
       os_type        = "cloud-init"
       qemu_os        = "l26"
       agent          = 0
@@ -35,7 +37,8 @@ variable "vms" {
 
     },
     "ubuntu-test-2" = {
-      name           = "ubuntu-test-2"
+      index          = "2"
+      name           = "ubuntu-test"
       disk_datastore = "local-lvm"
       agent          = 0
       onboot         = true
@@ -56,6 +59,7 @@ variable "pm_user" {}
 variable "pm_password" {}
 variable "ssh_keys" {}
 variable "ssh_user" {}
+variable "ssh_password" {}
 variable "datastore_name" {
   default     = "local"
   description = "name of datastore for storing images and local data"
