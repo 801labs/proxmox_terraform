@@ -24,6 +24,12 @@ resource "proxmox_vm_qemu" "ubuntu_vms" {
   }
 
 
+  provisioner "local-exec" {
+    inline = [
+      "ssh ubuntu@${var.ssh_forward_ip} sudo sed -e 's/${var.ssh_forward_ip}/${each.value.ip}/g' -i /etc/netplan/00-installer-config.yaml",
+      "ssh ubuntu@${var.ssh_forward_ip} sudo nohup $(which netplan) apply"
+    ]
+  }
 
   connection {
     type     = "ssh"
