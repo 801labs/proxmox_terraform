@@ -23,14 +23,6 @@ resource "proxmox_vm_qemu" "ubuntu_vms" {
     model  = "virtio"
   }
 
-
-  provisioner "local-exec" {
-    inline = [
-      "ssh ubuntu@${var.ssh_forward_ip} sudo sed -e 's/${var.ssh_forward_ip}/${each.value.ip}/g' -i /etc/netplan/00-installer-config.yaml",
-      "ssh ubuntu@${var.ssh_forward_ip} sudo nohup $(which netplan) apply"
-    ]
-  }
-
   connection {
     type     = "ssh"
     user     = var.ssh_user
@@ -40,7 +32,8 @@ resource "proxmox_vm_qemu" "ubuntu_vms" {
 
   provisioner "remote-exec" {
     inline = [
-      "ip a"
+      "sudo sed -e 's/${var.ssh_forward_ip}/${each.value.ip}/g' -i /etc/netplan/00-installer-config.yaml",
+      "netplan apply &"
     ]
   }
 }
