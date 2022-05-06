@@ -2,9 +2,11 @@ variable "vms" {
   type = map(
     object(
       {
+        index          = number
         name           = string
         os_type        = string
         qemu_os        = string
+        ip             = string
         memory         = number
         onboot         = bool
         agent          = number
@@ -20,7 +22,8 @@ variable "vms" {
   )
   default = {
     "ubuntu-test-1" = {
-      name           = "ubuntu-test-1"
+      index          = "1"
+      name           = "ubuntu-test"
       os_type        = "cloud-init"
       qemu_os        = "l26"
       agent          = 0
@@ -29,13 +32,15 @@ variable "vms" {
       memory         = 2048
       disk_datastore = "local-lvm"
       disk_size      = "30G"
+      ip             = "192.168.40.2"
       disk_type      = "sata"
       disk_format    = "raw"
       network_bridge = "vmbr0"
 
     },
     "ubuntu-test-2" = {
-      name           = "ubuntu-test-2"
+      index          = "2"
+      name           = "ubuntu-test"
       disk_datastore = "local-lvm"
       agent          = 0
       onboot         = true
@@ -46,6 +51,7 @@ variable "vms" {
       disk_size      = "30G"
       disk_type      = "sata"
       disk_format    = "raw"
+      ip             = "192.168.40.3"
       network_bridge = "vmbr0"
 
     }
@@ -53,8 +59,12 @@ variable "vms" {
 }
 
 variable "pm_user" {}
+variable "pm_ssh_user" {}
+variable "pm_host" {}
 variable "pm_password" {}
 variable "ssh_keys" {}
+variable "ssh_user" {}
+variable "ssh_password" {}
 variable "datastore_name" {
   default     = "local"
   description = "name of datastore for storing images and local data"
@@ -72,10 +82,14 @@ variable "proxmox_url" {
   description = "Proxmox url for connecting to api"
 }
 
-variable "ubuntu_cloud_iso" {
-  default = "local:iso/ubuntu-20.04.4-live-server-amd64.iso"
+variable "template_name" {
+  default = "ubuntu-20.04-template"
 }
 
-variable "ubuntu_base_image" {
-  default = "ubuntu-20.04-template"
+variable "gateway" {
+  default = "192.168.40.1"
+}
+
+variable "ssh_forward_ip" {
+  default = "192.168.40.254"
 }

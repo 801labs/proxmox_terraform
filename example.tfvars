@@ -1,3 +1,6 @@
 pm_user       = "<proxmox_user>"
 pm_password   = "<proxmox_pass>"
 ssh_key_user1 = "<public_key_1>"
+node_name     = "<node_name>"
+ssh_user      = "<ssh_user>"
+ssh_keys      = "<public_key>"
