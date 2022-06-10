@@ -1,25 +1,20 @@
 
-resource "proxmox_vm_qemu" "ubuntu_vms" {
-  for_each    = var.vms
-  name        = "${each.value.name}-${each.value.index}"
+resource "proxmox_vm_qemu" "samba_server" {
+  name        = "samba-server"
   target_node = var.node_name
 
-  clone      = var.template_name
-  full_clone = true
+  full_clone = false
 
-  cores  = each.value.cores
-  memory = each.value.memory
-
-  os_type = each.value.os_type
-  boot    = "cd"
+  cores  = var.samba_cores
+  memory = var.samba_memory
 
   cipassword = var.ssh_password
   ciuser     = var.ssh_user
   sshkeys    = var.ssh_keys
-  ipconfig0  = "ip=${each.value.ip}/24,gw=${var.gateway}"
+  ipconfig0  = "ip=${var.samba_ip}/24,gw=${var.gateway}"
 
   network {
-    bridge = each.value.network_bridge
+    bridge = "vmbr0"
     model  = "virtio"
   }
 
@@ -30,9 +25,20 @@ resource "proxmox_vm_qemu" "ubuntu_vms" {
     host     = var.ssh_forward_ip
   }
 
+  disk {
+    backup = 0
+    cache = "writeback"
+    file = "vm-101-disk-0"
+    format = "raw"
+    size = "115G"
+    storage = "local-lvm"
+    type = "scsi"
+    volume = "local-lvm:vm-101-disk-0"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -e 's/${var.ssh_forward_ip}/${each.value.ip}/g' -i /etc/netplan/00-installer-config.yaml",
+      "sudo sed -e 's/${var.ssh_forward_ip}/${var.samba_ip}/g' -i /etc/netplan/00-installer-config.yaml",
       "netplan apply &"
     ]
   }
