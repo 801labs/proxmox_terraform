@@ -7,3 +7,5 @@ terraform_*.log
 *.log
 *.swp
 **/.*.swp
+terraform.tfstate
+terraform.tfstate.backup
