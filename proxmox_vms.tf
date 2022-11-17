@@ -40,6 +40,53 @@ resource "proxmox_vm_qemu" "samba_server" {
   
 }
 
+resource "proxmox_vm_qemu" "nginx_cache" {
+  name        = "nginx-cache"
+  target_node = var.node_name
+
+  full_clone = true
+  clone = var.template_name
+  onboot = true
+
+  cores  = var.nginx_cache_cores
+  memory = var.nginx_cache_memory
+
+  cipassword = var.ssh_password
+  ciuser     = var.ssh_user
+  sshkeys    = var.ssh_keys
+  ipconfig0  = "ip=${var.nginx_cache_ip}/24,gw=${var.gateway}"
+
+  network {
+    bridge = "vmbr0"
+    model  = "virtio"
+  }
+
+  connection {
+    type     = "ssh"
+    user     = var.ssh_user
+    password = var.ssh_password
+    host     = var.ssh_forward_ip
+  }
+
+  disk {
+    backup = 0
+    cache = "writeback"
+    format = "raw"
+    size = "15G"
+    storage = var.samba_storage_pool
+    type = "scsi"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt install -y nginx tmux",
+      "sudo apt install -y nginx",
+      "sudo sed -e 's/${var.ssh_forward_ip}/${var.nginx_cache_ip}/g' -i /etc/netplan/00-installer-config.yaml",
+      "exec tmux new -- netplan apply &"
+    ]
+  }
+}
+
 resource "proxmox_vm_qemu" "dns1" {
   name        = "ns1"
   target_node = var.node_name
@@ -68,13 +115,19 @@ resource "proxmox_vm_qemu" "dns1" {
     host     = var.ssh_forward_ip
   }
 
+  disk {
+    backup = 0
+    cache = "writeback"
+    format = "raw"
+    size = "15G"
+    storage = var.samba_storage_pool
+    type = "scsi"
+  }
 
   provisioner "remote-exec" {
     inline = [
       "sudo sed -e 's/${var.ssh_forward_ip}/${var.dns_ip}/g' -i /etc/netplan/00-installer-config.yaml",
-      "netplan apply &"
+      "netplan apply"
     ]
   }
 }
-
-

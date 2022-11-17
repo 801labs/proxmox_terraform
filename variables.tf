@@ -27,8 +27,33 @@ variable "dns_memory" {
   default = 2048
 }
 
+
+variable "nginx_cache_ip" {
+  default = "192.168.40.10"
+}
+
+variable "nginx_cache_cores" {
+  default = 2
+}
+
+variable "nginx_cache_memory" {
+  default = 2048
+}
+
 variable "dns_ip" {
   default = "192.168.40.2"
+}
+
+variable "saltmaster_cores" {
+  default = 2
+}
+
+variable "saltmaster_memory" {
+  default = 2048
+}
+
+variable "saltmaster_ip" {
+  default = "192.168.40.6"
 }
 
 
