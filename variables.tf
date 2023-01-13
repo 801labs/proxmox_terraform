@@ -59,6 +59,7 @@ variable "saltmaster_ip" {
 
 variable "pm_user" {}
 variable "pm_password" {}
+variable "lxc_password" {}
 variable "ssh_keys" {}
 variable "ssh_user" {}
 variable "ssh_password" {}
@@ -83,6 +84,9 @@ variable "template_name" {
   default = "ubuntu-20.04-template"
 }
 
+variable "lxc_slow_storage" {
+  default = "LVM-SLOW"
+}
 variable "gateway" {
   default = "192.168.40.1"
 }
