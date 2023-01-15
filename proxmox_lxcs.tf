@@ -2,6 +2,7 @@ resource "proxmox_lxc" "lxcs" {
    for_each      = var.lxcs
    target_node   = each.value.node_name
    hostname      = each.value.name
+   searchdomain  = each.value.searchdomain
    unprivileged  = each.value.unprivileged
    ostemplate    = var.lxc_ubuntu_22
    start         = true
@@ -21,7 +22,7 @@ resource "proxmox_lxc" "lxcs" {
    }
 
    connection {
-       host = lookup(each.value.network, "ip", null)
+       host = self.network[0].ip
        user = "root"
        password = var.lxc_password 
        type = "ssh"
@@ -58,4 +59,18 @@ resource "proxmox_lxc" "lxcs" {
    }
 }
 
+resource "null_resource" "ns_file" {
+   connection {
+       host = "192.168.40.2"
+       type = "ssh"
+       user = "root"
+       password = var.lxc_password 
+   }
 
+   provisioner "file" {
+       source = "dns/root-auto-trust-anchor-file.conf"
+       destination = "/etc/unbound/unbound.conf.d/root-auto-trust-anchor-file.conf"
+   }
+   
+   depends_on = [proxmox_lxc.lxcs["ns1"]]
+}

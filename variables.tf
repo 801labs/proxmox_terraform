@@ -1,23 +1,3 @@
-variable "samba_cores" {
-  default = 2
-}
-
-variable "samba_memory" {
-  default = 4096
-}
-
-variable "samba_disk_size" {
-  default = "100G"
-}
-
-variable "samba_storage_pool" {
-  default = "local-lvm"
-}
-
-variable "samba_ip" {
-  default = "192.168.40.5"
-}
-
 variable "lxc_ubuntu_22" { 
    default = "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
 }
@@ -26,6 +6,7 @@ variable "lxcs" {
    type = map(object(
         {
            name            = string
+           searchdomain    = string
            node_name       = string
            cores           = string
            memory          = string
@@ -54,6 +35,7 @@ variable "lxcs" {
     default = {
         "apt_cache" = {
             name         = "apt-cache"
+            searchdomain = "801labs.org"
             node_name    = "dc801srv"
             cores        = "2"
             memory       = "2048"
@@ -65,7 +47,7 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
-                ip     = "192.168.40.10"
+                ip     = "192.168.40.11/24"
             }]
             mountpoint = [{
                 slot    = "0"
@@ -85,6 +67,7 @@ variable "lxcs" {
         },    
         "nginx_cache" = {
             name         = "nginx-cache"
+            searchdomain = "801labs.org"
             node_name    = "dc801srv"
             cores        = "2"
             memory       = "2048"
@@ -96,7 +79,7 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
-                ip     = "192.168.40.11"
+                ip     = "192.168.40.10/24"
             }]
             mountpoint = [{
                 slot    = "0"
@@ -116,6 +99,7 @@ variable "lxcs" {
         },
         "ns1" = {
             name         = "ns1"
+            searchdomain = "801labs.org"
             node_name    = "dc801srv"
             cores        = "2"
             memory       = "2048"
@@ -127,7 +111,7 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
-                ip     = "192.168.40.3"
+                ip     = "192.168.40.2/24"
             }]
             inline   = [
                  "sudo apt update && sudo apt upgrade -y",
@@ -136,6 +120,7 @@ variable "lxcs" {
         },
         "ansible" = {
             name         = "ansible"
+            searchdomain = "801labs.org"
             node_name    = "dc801srv"
             cores        = "2"
             memory       = "2048"
@@ -147,7 +132,7 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
-                ip     = "192.168.40.6"
+                ip     = "192.168.40.4/24"
             }]
             inline   = [
                  "sudo apt-add-repository ppa:ansible/ansible",
@@ -157,6 +142,7 @@ variable "lxcs" {
         },
         "nextcloud" = {
             name         = "nextcloud"
+            searchdomain = "801labs.org"
             node_name    = "dc801srv"
             cores        = "4"
             memory       = "4096"
@@ -168,7 +154,7 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
-                ip     = "192.168.40.7"
+                ip     = "192.168.40.7/24"
             }]
             mountpoint = [{
 	        slot    = "0"
@@ -188,6 +174,7 @@ variable "lxcs" {
         },
 	"fog" = {
             name         = "fog"
+            searchdomain = "801labs.org"
             node_name    = "dc801srv"
             cores        = "4"
             memory       = "4096"
@@ -198,8 +185,8 @@ variable "lxcs" {
             rootfs_size  = "15G"
             network      = [{
                 name   = "eth0"
-                bridge = "vmbr0"
-                ip     = "dhcp"
+                bridge = "vmbr80"
+                ip     = "192.168.80.2/24"
             }]
             mountpoint = [{
                 slot    = "0"
@@ -219,44 +206,6 @@ variable "lxcs" {
         }
     }
 }
-
-variable "dns_cores" {
-  default = 2
-}
-
-variable "dns_memory" {
-  default = 2048
-}
-
-
-variable "nginx_cache_ip" {
-  default = "192.168.40.10"
-}
-
-variable "nginx_cache_cores" {
-  default = 2
-}
-
-variable "nginx_cache_memory" {
-  default = 2048
-}
-
-variable "dns_ip" {
-  default = "192.168.40.2"
-}
-
-variable "saltmaster_cores" {
-  default = 2
-}
-
-variable "saltmaster_memory" {
-  default = 2048
-}
-
-variable "saltmaster_ip" {
-  default = "192.168.40.6"
-}
-
 
 variable "pm_user" {}
 variable "pm_password" {}
@@ -281,17 +230,6 @@ variable "proxmox_url" {
   description = "Proxmox url for connecting to api"
 }
 
-variable "template_name" {
-  default = "ubuntu-20.04-template"
-}
-
 variable "lxc_slow_storage" {
   default = "LVM-SLOW"
-}
-variable "gateway" {
-  default = "192.168.40.1"
-}
-
-variable "ssh_forward_ip" {
-  default = "192.168.40.254"
 }
