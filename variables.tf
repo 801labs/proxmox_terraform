@@ -48,6 +48,7 @@ variable "lxcs" {
                 mp      = string
                 size    = string
            })), [])
+           inline          = list(string)
         }
     )) 
     default = {
@@ -64,16 +65,55 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
-                ip     = "dhcp"
+                ip     = "192.168.40.10"
             }]
             mountpoint = [{
                 slot    = "0"
                 key     = "0"
                 storage = "LVM-SLOW"
                 size    = "100G"
+                mp      = "/appdata"
+            }]
+            inline     = [
+                 "sudo mkdir -p /etc/apt/keyrings",
+                 "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg",
+                 "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu && $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
+                 "sudo apt update",
+                 "sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin",
+                 "docker run --name apt-cacher-ng --init -d --restart=always --publish 80:3142 --volume /appdata/apt-cacher-ng:/var/cache/apt-cacher-ng sameersbn/apt-cacher-ng"
+            ]
+        },    
+        "nginx_cache" = {
+            name         = "nginx-cache"
+            node_name    = "dc801srv"
+            cores        = "2"
+            memory       = "2048"
+            keyctl       = true
+            unprivileged = true
+            nesting      = true
+            storage      = "local-lvm"
+            rootfs_size  = "15G"
+            network      = [{
+                name   = "eth0"
+                bridge = "vmbr0"
+                ip     = "192.168.40.11"
+            }]
+            mountpoint = [{
+                slot    = "0"
+                key     = "0"
+                storage = "LVM-SLOW"
+                size    = "55G"
                 mp      = "/cache"
             }]
-        },    
+            inline     = [
+                 "sudo mkdir -p /etc/apt/keyrings",
+                 "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg",
+                 "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu && $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
+                 "sudo apt update",
+                 "sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin",
+                 "sudo docker run -d --restart always --name lancache -v /cache/data:/data/cache -v /cache/logs:/data/logs -p 80:80 -p 443:443 -e CACHE_MAX_AGE=3560d -e CACHE_DISK_SIZE=1000000m lancachenet/monolithic:latest"
+            ]
+        },
         "ns1" = {
             name         = "ns1"
             node_name    = "dc801srv"
@@ -87,8 +127,12 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
-                ip     = "dhcp"
+                ip     = "192.168.40.3"
             }]
+            inline   = [
+                 "sudo apt update && sudo apt upgrade -y",
+                 "sudo apt install -y bind9-utils dnsutils net-tools unbound"
+            ]
         },
         "ansible" = {
             name         = "ansible"
@@ -103,11 +147,16 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
-                ip     = "dhcp"
+                ip     = "192.168.40.6"
             }]
+            inline   = [
+                 "sudo apt-add-repository ppa:ansible/ansible",
+                 "sudo apt update && sudo apt install -y ansible",
+                 "sudo apt upgrade -y"
+            ]
         },
-        "samba" = {
-            name         = "samba"
+        "nextcloud" = {
+            name         = "nextcloud"
             node_name    = "dc801srv"
             cores        = "4"
             memory       = "4096"
@@ -119,15 +168,23 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
-                ip     = "dhcp"
+                ip     = "192.168.40.7"
             }]
             mountpoint = [{
 	        slot    = "0"
 	        key     = "0"
 	        storage = "LVM-SLOW"
 	        size    = "100G"
-	        mp      = "/cache"
+	        mp      = "/var/lib/docker/volumes/nextcloud"
             }]	
+            inline   = [
+		 "sudo mkdir -p /etc/apt/keyrings",
+                 "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg",
+                 "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu && $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
+                 "sudo apt update",
+                 "sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin",
+                 "docker run -d -v nextlcloud:/var/www/html nextcloud -e NEXT_CLOUD_ADMIN_USER=nextcloud"
+            ]
         },
 	"fog" = {
             name         = "fog"
@@ -148,16 +205,17 @@ variable "lxcs" {
                 slot    = "0"
                 key     = "0"
                 storage = "local-lvm"
-                size    = "8G"
-                mp      = "/images"
-            },
-            {
-                slot    = "1"
-                key     = "1"
-                storage = "LVM-SLOW"
-                size    = "500G"
+                size    = "100G"
                 mp      = "/images"
             }]
+            inline   = [
+                 "sudo apt update && sudo apt upgrade -y",
+                 "sudo apt install -y git",
+                 "git clone https://github.com/FOGProject/fogproject.git",
+                 "git checkout dev-branch",
+                 "cd fogproject/bin/",
+                 "./installfog.sh -YE"
+            ]
         }
     }
 }

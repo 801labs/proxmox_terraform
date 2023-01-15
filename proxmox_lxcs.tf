@@ -19,6 +19,13 @@ resource "proxmox_lxc" "lxcs" {
        storage  = each.value.storage
        size     = each.value.rootfs_size 
    }
+
+   connection {
+       host = lookup(each.value.network, "ip", null)
+       user = "root"
+       password = var.lxc_password 
+       type = "ssh"
+   }
    
    dynamic "mountpoint" {
      for_each = each.value.mountpoint
@@ -38,6 +45,10 @@ resource "proxmox_lxc" "lxcs" {
        bridge     = network.value.bridge
        ip         = network.value.ip
      } 
+   }
+
+   provisioner "remote-exec" {
+        inline = each.value.inline
    }
 
    features {
