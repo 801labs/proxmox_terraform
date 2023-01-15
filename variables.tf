@@ -18,38 +18,38 @@ variable "samba_ip" {
   default = "192.168.40.5"
 }
 
-variable = "lxc_ubuntu_22" {
-  default = "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+variable "lxc_ubuntu_22" { 
+   default = "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
 }
 
 variable "lxcs" {
-   type = object(
+   type = map(object(
         {
-           name         = string
-           node_name    = string
-           cores        = string
-           memory       = string
-           keyctl       = bool
-           unprivileged = bool
-           nesting      = bool
-           mount        = string
-           storage      = string
-           rootfs_size  = string
-           password     = string
-           network      = object({
+           name            = string
+           node_name       = string
+           cores           = string
+           memory          = string
+           keyctl          = optional(bool, null)
+           unprivileged    = optional(bool, true)
+           nesting         = optional(bool, null)
+           mount           = optional(string, null)
+           storage         = string
+           rootfs_size     = string
+           password        = optional(string, null)
+           network         = optional(list(object({
                 name   = string
                 bridge = string
                 ip     = string
-           })
-           mountpoint   = object({
+           })), [])
+           mountpoint  = optional(list(object({
                 slot    = string
                 key     = string
                 storage = string
                 mp      = string
                 size    = string
-           })
+           })), [])
         }
-    ) 
+    )) 
     default = {
         "apt_cache" = {
             name         = "apt-cache"
@@ -59,57 +59,108 @@ variable "lxcs" {
             keyctl       = true
             unprivileged = true
             nesting      = true
-            mount        = "" 
             storage      = "local-lvm"
             rootfs_size  = "15G"
-            network      = {
+            network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
                 ip     = "dhcp"
-            }
-            mountpoint   = {
+            }]
+            mountpoint = [{
                 slot    = "0"
                 key     = "0"
                 storage = "LVM-SLOW"
                 size    = "100G"
                 mp      = "/cache"
-            }
-        }    
-        
-	"fog" = {
-            name         = "fog"
+            }]
+        },    
+        "ns1" = {
+            name         = "ns1"
+            node_name    = "dc801srv"
+            cores        = "2"
+            memory       = "2048"
+            keyctl       = true
+            unprivileged = true
+            nesting      = true
+            storage      = "local-lvm"
+            rootfs_size  = "15G"
+            network      = [{
+                name   = "eth0"
+                bridge = "vmbr0"
+                ip     = "dhcp"
+            }]
+        },
+        "ansible" = {
+            name         = "ansible"
+            node_name    = "dc801srv"
+            cores        = "2"
+            memory       = "2048"
+            keyctl       = true
+            unprivileged = true
+            nesting      = true
+            storage      = "local-lvm"
+            rootfs_size  = "15G"
+            network      = [{
+                name   = "eth0"
+                bridge = "vmbr0"
+                ip     = "dhcp"
+            }]
+        },
+        "samba" = {
+            name         = "samba"
             node_name    = "dc801srv"
             cores        = "4"
             memory       = "4096"
             keyctl       = true
             unprivileged = true
             nesting      = true
-            mount        = "" 
             storage      = "local-lvm"
             rootfs_size  = "15G"
-            network      = {
+            network      = [{
                 name   = "eth0"
                 bridge = "vmbr0"
                 ip     = "dhcp"
-            }
-            mountpoint   = {
+            }]
+            mountpoint = [{
+	        slot    = "0"
+	        key     = "0"
+	        storage = "LVM-SLOW"
+	        size    = "100G"
+	        mp      = "/cache"
+            }]	
+        },
+	"fog" = {
+            name         = "fog"
+            node_name    = "dc801srv"
+            cores        = "4"
+            memory       = "4096"
+            unprivileged = true
+            nesting      = true
+            mount        = "nfs" 
+            storage      = "local-lvm"
+            rootfs_size  = "15G"
+            network      = [{
+                name   = "eth0"
+                bridge = "vmbr0"
+                ip     = "dhcp"
+            }]
+            mountpoint = [{
                 slot    = "0"
                 key     = "0"
                 storage = "local-lvm"
                 size    = "8G"
                 mp      = "/images"
-            }
-            mountpoint   = {
+            },
+            {
                 slot    = "1"
                 key     = "1"
                 storage = "LVM-SLOW"
                 size    = "500G"
                 mp      = "/images"
-            }
+            }]
         }
-
     }
-
+}
 
 variable "dns_cores" {
   default = 2
