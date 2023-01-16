@@ -7,6 +7,7 @@ variable "lxcs" {
         {
            name            = string
            searchdomain    = string
+           nameserver      = string
            node_name       = string
            cores           = string
            memory          = string
@@ -21,6 +22,91 @@ variable "lxcs" {
                 name   = string
                 bridge = string
                 ip     = string
+                gw     = optional(string)
+           })), [])
+           mountpoint  = optional(list(object({
+                slot    = string
+                key     = string
+                storage = string
+                mp      = string
+                size    = string
+           })), [])
+           inline          = list(string)
+        }
+    )) 
+    default = {
+        "ns1" = {
+            name         = "ns1"
+            searchdomain = "801labs.org"
+            nameserver   = "192.168.40.2"
+            node_name    = "dc801srv"
+            cores        = "2"
+            memory       = "2048"
+            keyctl       = true
+            unprivileged = true
+            nesting      = true
+            storage      = "local-lvm"
+            rootfs_size  = "15G"
+            network      = [{
+                name   = "eth0"
+                bridge = "vmbr0"
+                ip     = "192.168.40.2/24"
+                gw     = "192.168.40.1"
+            }]
+            inline   = [
+                 "sudo apt update && sudo apt upgrade -y",
+                 "sudo apt install -y bind9-utils dnsutils net-tools unbound"
+            ]
+        },
+        "ansible" = {
+            name         = "ansible"
+            searchdomain = "801labs.org"
+            nameserver   = "192.168.40.2"
+            node_name    = "dc801srv"
+            cores        = "2"
+            memory       = "2048"
+            keyctl       = true
+            unprivileged = true
+            nesting      = true
+            storage      = "local-lvm"
+            rootfs_size  = "15G"
+            network      = [{
+                name   = "eth0"
+                bridge = "vmbr0"
+                ip     = "192.168.40.4/24"
+                gw     = "192.168.40.1"
+            }]
+            inline   = [
+                 "apt update",
+                 "apt-add-repository ppa:ansible/ansible",
+                 "apt update && sudo apt install -y ansible",
+                 "apt upgrade -y"
+            ]
+        }
+    }
+}
+
+variable "lxcs2" {
+   type = map(object(
+        {
+           name            = string
+           searchdomain    = string
+           nameserver      = string
+           node_name       = string
+           cores           = string
+           memory          = string
+           keyctl          = optional(bool, null)
+           unprivileged    = optional(bool, true)
+           nesting         = optional(bool, null)
+           mount           = optional(string, null)
+           storage         = string
+           rootfs_size     = string
+           password        = optional(string, null)
+           network         = optional(list(object({
+                name   = string
+                bridge = string
+                ip     = string
+                gw     = optional(string)
            })), [])
            mountpoint  = optional(list(object({
                 slot    = string
@@ -36,6 +122,7 @@ variable "lxcs" {
         "apt_cache" = {
             name         = "apt-cache"
             searchdomain = "801labs.org"
+            nameserver   = "192.168.40.2"
             node_name    = "dc801srv"
             cores        = "2"
             memory       = "2048"
@@ -48,6 +135,7 @@ variable "lxcs" {
                 name   = "eth0"
                 bridge = "vmbr0"
                 ip     = "192.168.40.11/24"
+                gw     = "192.168.40.1"
             }]
             mountpoint = [{
                 slot    = "0"
@@ -68,6 +156,7 @@ variable "lxcs" {
         "nginx_cache" = {
             name         = "nginx-cache"
             searchdomain = "801labs.org"
+            nameserver   = "192.168.40.2"
             node_name    = "dc801srv"
             cores        = "2"
             memory       = "2048"
@@ -80,6 +169,7 @@ variable "lxcs" {
                 name   = "eth0"
                 bridge = "vmbr0"
                 ip     = "192.168.40.10/24"
+                gw     = "192.168.40.1"
             }]
             mountpoint = [{
                 slot    = "0"
@@ -96,57 +186,50 @@ variable "lxcs" {
                  "sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin",
                  "sudo docker run -d --restart always --name lancache -v /cache/data:/data/cache -v /cache/logs:/data/logs -p 80:80 -p 443:443 -e CACHE_MAX_AGE=3560d -e CACHE_DISK_SIZE=1000000m lancachenet/monolithic:latest"
             ]
-        },
-        "ns1" = {
-            name         = "ns1"
-            searchdomain = "801labs.org"
-            node_name    = "dc801srv"
-            cores        = "2"
-            memory       = "2048"
-            keyctl       = true
-            unprivileged = true
-            nesting      = true
-            storage      = "local-lvm"
-            rootfs_size  = "15G"
-            network      = [{
-                name   = "eth0"
-                bridge = "vmbr0"
-                ip     = "192.168.40.2/24"
-            }]
-            inline   = [
-                 "sudo apt update && sudo apt upgrade -y",
-                 "sudo apt install -y bind9-utils dnsutils net-tools unbound"
-            ]
-        },
-        "ansible" = {
-            name         = "ansible"
-            searchdomain = "801labs.org"
-            node_name    = "dc801srv"
-            cores        = "2"
-            memory       = "2048"
-            keyctl       = true
-            unprivileged = true
-            nesting      = true
-            storage      = "local-lvm"
-            rootfs_size  = "15G"
-            network      = [{
-                name   = "eth0"
-                bridge = "vmbr0"
-                ip     = "192.168.40.4/24"
-            }]
-            inline   = [
-                 "sudo apt-add-repository ppa:ansible/ansible",
-                 "sudo apt update && sudo apt install -y ansible",
-                 "sudo apt upgrade -y"
-            ]
-        },
+        }
+    }
+}
+
+variable "lxcs3" {
+   type = map(object(
+        {
+           name            = string
+           searchdomain    = string
+           nameserver      = string
+           node_name       = string
+           cores           = string
+           memory          = string
+           keyctl          = optional(bool, null)
+           unprivileged    = optional(bool, true)
+           nesting         = optional(bool, null)
+           mount           = optional(string, null)
+           storage         = string
+           rootfs_size     = string
+           password        = optional(string, null)
+           network         = optional(list(object({
+                name   = string
+                bridge = string
+                ip     = string
+                gw     = optional(string)
+           })), [])
+           mountpoint  = optional(list(object({
+                slot    = string
+                key     = string
+                storage = string
+                mp      = string
+                size    = string
+           })), [])
+           inline          = list(string)
+        }
+    )) 
+    default = {
         "nextcloud" = {
             name         = "nextcloud"
             searchdomain = "801labs.org"
+            nameserver   = "192.168.40.2"
             node_name    = "dc801srv"
             cores        = "4"
             memory       = "4096"
-            keyctl       = true
             unprivileged = true
             nesting      = true
             storage      = "local-lvm"
@@ -155,6 +238,7 @@ variable "lxcs" {
                 name   = "eth0"
                 bridge = "vmbr0"
                 ip     = "192.168.40.7/24"
+                gw     = "192.168.40.1"
             }]
             mountpoint = [{
 	        slot    = "0"
@@ -175,6 +259,7 @@ variable "lxcs" {
 	"fog" = {
             name         = "fog"
             searchdomain = "801labs.org"
+            nameserver   = "192.168.40.2"
             node_name    = "dc801srv"
             cores        = "4"
             memory       = "4096"
@@ -186,7 +271,7 @@ variable "lxcs" {
             network      = [{
                 name   = "eth0"
                 bridge = "vmbr80"
-                ip     = "192.168.80.2/24"
+                ip     = "dhcp"
             }]
             mountpoint = [{
                 slot    = "0"
@@ -211,8 +296,6 @@ variable "pm_user" {}
 variable "pm_password" {}
 variable "lxc_password" {}
 variable "ssh_keys" {}
-variable "ssh_user" {}
-variable "ssh_password" {}
 variable "datastore_name" {
   default     = "local"
   description = "name of datastore for storing images and local data"
