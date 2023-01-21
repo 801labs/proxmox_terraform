@@ -82,44 +82,8 @@ variable "lxcs" {
                  "apt update && sudo apt install -y ansible",
                  "apt upgrade -y"
             ]
-        }
-    }
-}
-
-variable "lxcs2" {
-   type = map(object(
-        {
-           name            = string
-           searchdomain    = string
-           nameserver      = string
-           node_name       = string
-           cores           = string
-           memory          = string
-           keyctl          = optional(bool, null)
-           unprivileged    = optional(bool, true)
-           nesting         = optional(bool, null)
-           mount           = optional(string, null)
-           storage         = string
-           rootfs_size     = string
-           password        = optional(string, null)
-           network         = optional(list(object({
-                name   = string
-                bridge = string
-                ip     = string
-                gw     = optional(string)
-           })), [])
-           mountpoint  = optional(list(object({
-                slot    = string
-                key     = string
-                storage = string
-                mp      = string
-                size    = string
-           })), [])
-           inline          = list(string)
-        }
-    )) 
-    default = {
-        "apt_cache" = {
+        },
+	"apt_cache" = {
             name         = "apt-cache"
             searchdomain = "801labs.org"
             nameserver   = "192.168.40.2"
@@ -186,43 +150,7 @@ variable "lxcs2" {
                  "sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin",
                  "sudo docker run -d --restart always --name lancache -v /cache/data:/data/cache -v /cache/logs:/data/logs -p 80:80 -p 443:443 -e CACHE_MAX_AGE=3560d -e CACHE_DISK_SIZE=1000000m lancachenet/monolithic:latest"
             ]
-        }
-    }
-}
-
-variable "lxcs3" {
-   type = map(object(
-        {
-           name            = string
-           searchdomain    = string
-           nameserver      = string
-           node_name       = string
-           cores           = string
-           memory          = string
-           keyctl          = optional(bool, null)
-           unprivileged    = optional(bool, true)
-           nesting         = optional(bool, null)
-           mount           = optional(string, null)
-           storage         = string
-           rootfs_size     = string
-           password        = optional(string, null)
-           network         = optional(list(object({
-                name   = string
-                bridge = string
-                ip     = string
-                gw     = optional(string)
-           })), [])
-           mountpoint  = optional(list(object({
-                slot    = string
-                key     = string
-                storage = string
-                mp      = string
-                size    = string
-           })), [])
-           inline          = list(string)
-        }
-    )) 
-    default = {
+        },
         "nextcloud" = {
             name         = "nextcloud"
             searchdomain = "801labs.org"
@@ -270,9 +198,15 @@ variable "lxcs3" {
             rootfs_size  = "15G"
             network      = [{
                 name   = "eth0"
+                bridge = "vmbr0"
+                ip     = "192.168.40.13/24"
+            },
+	    {
+                name   = "eth1"
                 bridge = "vmbr80"
-                ip     = "dhcp"
-            }]
+                ip     = "192.168.80.2/24"
+            }
+	    ]
             mountpoint = [{
                 slot    = "0"
                 key     = "0"
@@ -288,9 +222,10 @@ variable "lxcs3" {
                  "cd fogproject/bin/",
                  "./installfog.sh -YE"
             ]
-        }
+        } 
     }
 }
+
 
 variable "pm_user" {}
 variable "pm_password" {}
