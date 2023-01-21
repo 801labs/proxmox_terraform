@@ -78,6 +78,7 @@ variable "lxcs" {
             }]
             inline   = [
                  "apt update",
+                 "apt install software-properties-common",
                  "apt-add-repository ppa:ansible/ansible",
                  "apt update && sudo apt install -y ansible",
                  "apt upgrade -y"
@@ -200,11 +201,13 @@ variable "lxcs" {
                 name   = "eth0"
                 bridge = "vmbr0"
                 ip     = "192.168.40.13/24"
+                gw     = "192.168.40.1"
             },
 	    {
                 name   = "eth1"
                 bridge = "vmbr80"
                 ip     = "192.168.80.2/24"
+                gw     = "192.168.80.1"
             }
 	    ]
             mountpoint = [{
