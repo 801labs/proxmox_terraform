@@ -1,6 +1,7 @@
 *init.sh
 .terraform.d/*
 .terraform/providers/*
+**/.terraform.tfstate*
 local.*
 *.plan
 terraform_*.log
