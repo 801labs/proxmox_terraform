@@ -118,6 +118,32 @@ variable "lxcs" {
                  "docker run --name apt-cacher-ng --init -d --restart=always --publish 80:3142 --volume /appdata/apt-cacher-ng:/var/cache/apt-cacher-ng sameersbn/apt-cacher-ng"
             ]
         },    
+	"drone" = {
+            name         = "drone"
+            searchdomain = "801labs.org"
+            nameserver   = "192.168.40.2"
+            node_name    = "dc801srv"
+            cores        = "2"
+            memory       = "2048"
+            keyctl       = true
+            unprivileged = true
+            nesting      = true
+            storage      = "local-lvm"
+            rootfs_size  = "15G"
+            network      = [{
+                name   = "eth0"
+                bridge = "vmbr0"
+                ip     = "192.168.40.12/24"
+                gw     = "192.168.40.1"
+            }]
+            inline     = [
+                 "sudo mkdir -p /etc/apt/keyrings",
+                 "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg",
+                 "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu && $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
+                 "sudo apt update",
+                 "sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin",
+            ]
+        },
         "nginx_cache" = {
             name         = "nginx-cache"
             searchdomain = "801labs.org"
@@ -184,48 +210,7 @@ variable "lxcs" {
                  "sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin",
                  "docker run -d -v nextlcloud:/var/www/html nextcloud -e NEXT_CLOUD_ADMIN_USER=nextcloud"
             ]
-        },
-	"fog" = {
-            name         = "fog"
-            searchdomain = "801labs.org"
-            nameserver   = "192.168.40.2"
-            node_name    = "dc801srv"
-            cores        = "4"
-            memory       = "4096"
-            unprivileged = true
-            nesting      = true
-            mount        = "nfs" 
-            storage      = "local-lvm"
-            rootfs_size  = "15G"
-            network      = [{
-                name   = "eth0"
-                bridge = "vmbr0"
-                ip     = "192.168.40.13/24"
-                gw     = "192.168.40.1"
-            },
-	    {
-                name   = "eth1"
-                bridge = "vmbr80"
-                ip     = "192.168.80.2/24"
-                gw     = "192.168.80.1"
-            }
-	    ]
-            mountpoint = [{
-                slot    = "0"
-                key     = "0"
-                storage = "local-lvm"
-                size    = "100G"
-                mp      = "/images"
-            }]
-            inline   = [
-                 "sudo apt update && sudo apt upgrade -y",
-                 "sudo apt install -y git",
-                 "git clone https://github.com/FOGProject/fogproject.git",
-                 "git checkout dev-branch",
-                 "cd fogproject/bin/",
-                 "./installfog.sh -YE"
-            ]
-        } 
+        }
     }
 }
 
